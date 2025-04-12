@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhotoStrips | Terms</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* CSS untuk Privacy Section */
+    /* ========== Global Styles ========== */
+    * {
+      font-family: 'Poppins', sans-serif;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh; /* Pastikan tinggi minimal 100% viewport */
+      background: linear-gradient(to bottom right, #fae4e0, #f1f8e9);
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-size: cover; /* Agar background mengisi seluruh layar */
+      background-position: center; /* Posisi background di tengah */
+      background-attachment: fixed; /* Supaya background tetap saat scroll */
+    }
+
+    /* ========== Navbar ========== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      margin-bottom: 30px;
+      transition: all 0.3s ease-in-out;
+      width: 100%;
+    }
+
+    .nav-container {
+      padding: 10px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      gap: 24px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-menu li a {
+      text-decoration: none;
+      color: #4a148c;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-menu li a:hover {
+      background-color: #4a148c;
+      color: white;
+      box-shadow: 0 0 8px rgba(74, 20, 140, 0.3);
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: #4a148c;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      flex-grow: 1;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section h1 {
+      color: #4a148c;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .section p {
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    /* ========== Media Query: Tablet (≤768px) ========== */
+    @media (max-width: 768px) {
+      .nav-menu {
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        padding: 12px 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        flex-direction: column;
+        gap: 14px;
+        display: none;
+      }
+
+      .nav-menu.show {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      #main-container {
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .video-container {
+        width: 100%;
+      }
+
+      .preview-container {
+        width: 100%;
+        max-width: 300px;
+        margin-top: 20px;
+      }
+
+      button {
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+
+      #countdown {
+        font-size: 36px;
+      }
+    }
+
+    /* ========== Media Query: Mobile (≤480px) ========== */
+    @media (max-width: 480px) {
+      #countdown {
+        font-size: 28px;
+      }
+
+      button {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
+      video {
+        width: 100%;
+      }
+
+      .preview-live-img {
+        width: 100%;
+        height: auto;
+      }
+
+      .footer-icons {
+        gap: 12px;
+      }
+
+      .footer-links {
+        flex-direction: row;
+        gap: 8px;
+      }
+
+      .footer-links a,
+      .footer-text {
+        font-size: 13px;
+      }
+    }
+
+    /* ========== Footer Styles ========== */
+    .footer {
+      width: 100%;
+      padding: 24px 16px;
+      background: #f5f5f5;
+      text-align: center;
+      border-top: 1px solid #ddd;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer-text {
+      margin: 0;
+      font-size: 14px;
+      color: #777;
+    }
+
+    .footer-icons {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-icons img {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.2s ease;
+      filter: invert(20%) sepia(88%) saturate(7474%) hue-rotate(276deg) brightness(92%) contrast(94%);
+    }
+
+    .footer-icons img:hover {
+      transform: scale(1.15);
+    }
+
+    .footer-links {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #4a148c;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: #6a1b9a;
+    }
+
+    /* ========== Back Button ========== */
+    .back-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4a148c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #6a1b9a;
+    }
+  </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+          <div class="logo"><img src="/favicon.png" alt="logo" height="50px"></div>
+          <ul class="nav-menu" id="navMenu">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+          <div class="menu-toggle" id="menuToggle">&#9776;</div>
+        </div>
+    </nav>
+
+  <div class="container">
+    <div class="section" id="privacy">
+      <h1>Contact</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nec eros id purus hendrerit euismod. Proin auctor dolor in leo ullamcorper, id fringilla magna interdum. Aenean tempor placerat volutpat. Nulla id mauris sit amet urna ultricies tempor nec sed purus. Curabitur euismod felis eget turpis dictum, ut efficitur arcu laoreet.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae dignissimos facilis mollitia at hic cumque corporis asperiores omnis maxime, vel, aliquid totam rerum temporibus perspiciatis laudantium iste minus exercitationem cupiditate.</p>
+      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur id eaque deleniti autem, nesciunt libero adipisci recusandae nihil corrupti ex error iusto eos quisquam exercitationem vero vitae minus neque nostrum.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere quae assumenda eos dolores exercitationem. Ex cum, quis eos sed provident aliquid vero culpa nobis facilis tempora corrupti excepturi. Quos, ullam.</p>
+    </div>
+    <button class="back-button" onclick="window.history.back();">Kembali</button>
+  </div>
+
+  <footer class="footer">
+    <p class="footer-text">&copy; 2025 PhotoStrips. Dibuat oleh iqbl.rmdhan.</p>
+  
+    <div class="footer-icons">
+      <a href="#" title="Instagram"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" /></a>
+      <a href="#" title="Facebook"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" /></a>
+      <a href="#" title="Twitter"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="Twitter" /></a>
+      <a href="#" title="Email"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/gmail.svg" alt="Email" /></a>
+    </div>
+  
+    <div class="footer-links">
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/support.html">Support</a>
+    </div>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById("menuToggle");
+    const navMenu = document.getElementById("navMenu");
+    toggle.addEventListener("click", () => {
+      navMenu.classList.toggle("show");
+    });
+  </script>
+  
+</body>
+</html>

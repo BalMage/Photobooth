@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhotoStrips | Preview</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* === Base Layout === */
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh; /* Pastikan tinggi minimal body setinggi layar */
+      background: linear-gradient(to bottom right, #fae4e0, #f1f8e9);
+      color: #222;
+      text-align: center; /* Menjaga teks di tengah */   
+      justify-content: flex-start; /* Agar konten dimulai dari atas */
+      background-size: cover; /* Agar background mengisi seluruh layar */
+      background-position: center; /* Memastikan background tetap terpusat */
+      background-attachment: fixed; /* Supaya background tetap saat di-scroll */
+    }
+
+    /* === Navbar === */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      transition: all 0.3s ease-in-out;
+      padding: 10px;
+    }
+
+    .nav-container {
+      padding: 10px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: #4a148c;
+    }
+
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      gap: 24px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-menu li a {
+      text-decoration: none;
+      color: #4a148c;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-menu li a:hover {
+      background-color: #4a148c;
+      color: white;
+      box-shadow: 0 0 8px rgba(74, 20, 140, 0.3);
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: #4a148c;
+    }
+
+    /* === Canvas + Controls === */
+    canvas {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      background-color: white;
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      border: 1px solid #ccc;
+    }
+
+    .controls {
+      margin: 20px 0;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .color-button {
+      background-color: #000000;
+      color: #ffffff;
+    }
+
+    .color-button.putih {
+      background-color: #ffffff;
+      color: #333;
+      border: 1px solid #ccc;
+    }
+
+    .color-button.pink {
+      background-color: #f8bbd0;
+      color: #880e4f;
+    }
+
+    .color-button.abu-abu {
+      background-color: #e0e0e0;
+      color: #444;
+    }
+
+    .frame-button {
+      background-color: #ec9fdc;
+      color: #ffffff;
+    }
+
+    .frame-button:hover,
+    .color-button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    .tombol {
+      padding-bottom: 80px;
+    }
+
+    a#download, a#reset {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 32px;
+      font-size: 18px;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    a#download {
+      background-color: #4db6ac;
+      color: white;
+    }
+
+    a#download:hover {
+      background-color: #00897b;
+    }
+
+    a#reset {
+      background-color: #ff8a65;
+      color: white;
+    }
+
+    a#reset:hover {
+      background-color: #e64a19;
+    }
+
+    input[type="color"] {
+      margin-top: 10px;
+      width: 60px;
+      height: 40px;
+      border: none;
+      cursor: pointer;
+    }
+
+    label {
+      margin-left: 10px;
+      font-weight: 600;
+    }
+
+    /* === Footer === */
+    .footer {
+      margin-top: auto;
+      padding: 24px 16px;
+      background: #f5f5f5;
+      text-align: center;
+      border-top: 1px solid #ddd;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer-text {
+      margin: 0;
+      font-size: 14px;
+      color: #777;
+    }
+
+    .footer-icons {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-icons img {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.2s ease;
+      filter: invert(20%) sepia(88%) saturate(7474%) hue-rotate(276deg) brightness(92%) contrast(94%);
+    }
+
+    .footer-icons img:hover {
+      transform: scale(1.15);
+    }
+
+    .footer-links {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #4a148c;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: #6a1b9a;
+    }
+
+    /* === Responsive === */
+    @media (max-width: 768px) {
+      .nav-menu {
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        padding: 12px 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        flex-direction: column;
+        gap: 14px;
+        display: none;
+      }
+
+      .nav-menu.show {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      #finalCanvas {
+        max-width: 50%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer-icons {
+        gap: 12px;
+      }
+
+      .footer-links {
+        flex-direction: row;
+        gap: 8px;
+      }
+
+      .footer-links a,
+      .footer-text {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo"><img src="/favicon.png" alt="logo" height="50px" /></div>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <div class="menu-toggle" id="menuToggle">&#9776;</div>
+    </div>
+  </nav>
+
+  <div class="controls">
+    <strong>Warna Background</strong><br />
+    <button class="color-button hitam" onclick="setColor('#000000')">Hitam</button>
+    <button class="color-button putih" onclick="setColor('#ffffff')">Putih</button>
+    <button class="color-button pink" onclick="setColor('#ffb6c1')">Pink</button>
+    <button class="color-button abu-abu" onclick="setColor('#888888')">Abu-abu</button>
+    <br /><br />
+    <strong>Color Picker</strong><br />
+    <input type="color" id="customColorPicker" onchange="setColor(this.value, true)" value="#ffffff" />
+    <br /><br />
+    <strong>Pilih Frame</strong><br />
+    <button class="frame-button" onclick="setFrame('color')">Default</button>
+    <button class="frame-button" onclick="setFrame('custom', '/frames/frame1.png')">Frame 1</button>
+    <button class="frame-button" onclick="setFrame('custom', '/frames/frame2.png')">Frame 2</button>
+    <button class="frame-button" onclick="setFrame('custom', '/frames/frame3.png')">Frame 3</button>
+  </div>
+
+  <canvas id="finalCanvas"></canvas>
+  <div class="tombol">
+    <a id="download" download="fotostrip.png">💾 Download Hasil</a>
+    <a id="reset" href="#" onclick="resetPhoto()">🔁 Ulang Foto</a>
+  </div>
+
+  <footer class="footer">
+    <p class="footer-text">&copy; 2025 PhotoStrips. Dibuat oleh iqbl.rmdhan.</p>
+    <div class="footer-icons">
+      <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" /></a>
+      <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" /></a>
+      <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="Twitter" /></a>
+      <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/gmail.svg" alt="Email" /></a>
+    </div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Support</a>
+    </div>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById("finalCanvas");
+    const ctx = canvas.getContext("2d");
+    const download = document.getElementById("download");
+
+    let frameChoice = "color";
+    let customFrameSrc = "";
+    let color = "#ffffff";
+    const photos = JSON.parse(localStorage.getItem("photos") || "[]");
+
+    function setColor(c, force = false) {
+      if (frameChoice === "custom" && !force) return;
+      color = c;
+      renderCanvas();
+    }
+
+    function setFrame(f, src = "") {
+      frameChoice = f;
+      customFrameSrc = src;
+
+      if (src.includes("frame1.png")) color = "#169d53";
+      else if (src.includes("frame2.png")) color = "#e5e6d9";
+      else if (src.includes("frame3.png")) color = "#272323";
+
+      renderCanvas();
+    }
+
+    function renderCanvas() {
+      if (photos.length !== 3) return;
+
+      const sampleImg = new Image();
+      sampleImg.src = photos[0];
+      sampleImg.onload = () => {
+        const photoWidth = 1080;
+        const photoHeight = 720;
+        const sideThickness = 120;
+        const topThickness = 120;
+        const bottomThickness = 0;
+        const extraBottom = 632;
+        const totalWidth = photoWidth + sideThickness * 2;
+        const totalHeightPerPhoto = topThickness + photoHeight + bottomThickness;
+        const canvasHeight = totalHeightPerPhoto * 3 + extraBottom;
+
+        canvas.width = totalWidth;
+        canvas.height = canvasHeight;
+
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        let loaded = 0;
+
+        photos.forEach((dataUrl, i) => {
+          const img = new Image();
+          img.src = dataUrl;
+          img.onload = () => {
+            let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
+            const targetRatio = photoWidth / photoHeight;
+            const imgRatio = img.width / img.height;
+
+            if (imgRatio > targetRatio) {
+              sHeight = img.height;
+              sWidth = sHeight * targetRatio;
+              sx = (img.width - sWidth) / 2;
+            } else {
+              sWidth = img.width;
+              sHeight = sWidth / targetRatio;
+              sy = (img.height - sHeight) / 2;
+            }
+
+            const offsetY = i * totalHeightPerPhoto;
+            ctx.fillRect(0, offsetY, totalWidth, topThickness);
+            ctx.fillRect(0, offsetY + topThickness + photoHeight, totalWidth, bottomThickness);
+            ctx.fillRect(0, offsetY + topThickness, sideThickness, photoHeight);
+            ctx.fillRect(totalWidth - sideThickness, offsetY + topThickness, sideThickness, photoHeight);
+
+            ctx.drawImage(
+              img, sx, sy, sWidth, sHeight,
+              sideThickness,
+              offsetY + topThickness,
+              photoWidth,
+              photoHeight
+            );
+
+            loaded++;
+            if (loaded === 3) {
+              const finalFrameY = offsetY + topThickness + photoHeight + bottomThickness;
+              ctx.fillRect(0, finalFrameY, totalWidth, extraBottom);
+
+              if (frameChoice === "custom" && customFrameSrc) {
+                const frameImg = new Image();
+                frameImg.src = customFrameSrc;
+                frameImg.onload = () => {
+                  ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+                  download.href = canvas.toDataURL("image/png");
+                };
+              } else {
+                download.href = canvas.toDataURL("image/png");
+              }
+            }
+          };
+        });
+      };
+    }
+
+    function resetPhoto() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      localStorage.removeItem("photos");
+      window.location.href = 'photostrip.html';
+    }
+
+    renderCanvas();
+  </script>
+
+  <script>
+    const toggle = document.getElementById("menuToggle");
+    const navMenu = document.getElementById("navMenu");
+    toggle.addEventListener("click", () => {
+      navMenu.classList.toggle("show");
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhotoStrips</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    /* ========== Global Styles ========== */
+* {
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh; /* Pastikan tinggi minimal 100% viewport */
+  background: linear-gradient(to bottom right, #fae4e0, #f1f8e9);
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-size: cover; /* Agar background mengisi seluruh layar */
+  background-position: center; /* Posisi background di tengah */
+  background-attachment: fixed; /* Supaya background tetap saat scroll */
+}
+
+
+/* ========== Navbar ========== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  margin-bottom: 30px;
+  transition: all 0.3s ease-in-out;
+  width: 100%;
+}
+
+.nav-container {
+  padding: 10px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li a {
+  text-decoration: none;
+  color: #4a148c;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.nav-menu li a:hover {
+  background-color: #4a148c;
+  color: white;
+  box-shadow: 0 0 8px rgba(74, 20, 140, 0.3);
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #4a148c;
+}
+
+/* ========== Main Container ========== */
+#main-container {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  padding: 20px;
+  padding-top: 0;
+}
+
+/* ========== Video Container ========== */
+.video-container {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: #e8f9ff;
+  border: 2px solid #4fc3f7;
+  aspect-ratio: 3/2;
+  height: auto;
+}
+
+video {
+  transform: scaleX(-1);
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+#countdown {
+  font-size: 60px;
+  color: #7b1fa2;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.flash-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: 0;
+  z-index: 9;
+  transition: opacity 0.3s ease-out;
+}
+
+/* ========== Button Styles ========== */
+button {
+  margin: 10px 5px;
+  padding: 14px 22px;
+  background: linear-gradient(145deg, #00c9a7, #b2f7ef);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+button:disabled {
+  background: #cccccc;
+  color: #888888;
+  cursor: not-allowed;
+}
+
+/* ========== Preview Styles ========== */
+.preview-container {
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 320px;
+}
+
+.preview-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.preview-live-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid #81d4fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.preview-live-img:hover {
+  transform: scale(1.05);
+}
+
+/* ========== Media Query: Tablet (≤768px) ========== */
+@media (max-width: 768px) {
+  .nav-menu {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 12px 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    gap: 14px;
+    display: none;
+  }
+
+  .nav-menu.show {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  #main-container {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .video-container {
+    width: 100%;
+  }
+
+  .preview-container {
+    width: 100%;
+    max-width: 300px;
+    margin-top: 20px;
+  }
+
+  button {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  #countdown {
+    font-size: 36px;
+  }
+}
+
+/* ========== Media Query: Mobile (≤480px) ========== */
+@media (max-width: 480px) {
+  #countdown {
+    font-size: 28px;
+  }
+
+  button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  video {
+    width: 100%;
+  }
+
+  .preview-live-img {
+    width: 100%;
+    height: auto;
+  }
+
+  .footer-icons {
+    gap: 12px;
+  }
+
+  .footer-links {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .footer-links a,
+  .footer-text {
+    font-size: 13px;
+  }
+}
+
+/* ========== Footer Styles ========== */
+.footer {
+  width: 100%;
+  padding: 24px 16px;
+  background: #f5f5f5;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  margin-top: 100px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.footer-text {
+  margin: 0;
+  font-size: 14px;
+  color: #777;
+}
+
+.footer-icons {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-icons img {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease;
+  filter: invert(20%) sepia(88%) saturate(7474%) hue-rotate(276deg) brightness(92%) contrast(94%);
+}
+
+.footer-icons img:hover {
+  transform: scale(1.15);
+}
+
+.footer-links {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: #4a148c;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #6a1b9a;
+}
+
+</style>
+  
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo"><img src="/favicon.png" alt="logo" height="50px"></div>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="menu-toggle" id="menuToggle">&#9776;</div>
+    </div>
+  </nav>
+  
+  <div id="main-container">
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div class="video-container">
+        <video id="video" autoplay playsinline></video>
+        <div id="countdown"></div>
+        <div id="flashEffect" class="flash-effect"></div>
+      </div>
+      <div>
+        <select id="delaySelect">
+          <option value="1000">1 detik</option>
+          <option value="3000" selected>3 detik</option>
+          <option value="5000">5 detik</option>
+          <option value="10000">10 detik</option>
+        </select>
+        <button id="start">Mulai Sesi Foto</button>
+        <button id="finish" disabled>Selesai</button>
+        <button id="reset" style="display:none;">Mulai Ulang Sesi Foto</button>
+      </div>
+      <canvas id="previewCanvas" style="display: none;"></canvas>
+    </div>
+
+    <div class="preview-container" id="previewAreaLive"></div>
+  </div>
+
+
+<footer class="footer">
+  <p class="footer-text">&copy; 2025 PhotoStrips. Dibuat oleh iqbl.rmdhan.</p>
+
+  <div class="footer-icons">
+    <a href="#" title="Instagram"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" /></a>
+    <a href="#" title="Facebook"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" /></a>
+    <a href="#" title="Twitter"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="Twitter" /></a>
+    <a href="#" title="Email"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/gmail.svg" alt="Email" /></a>
+  </div>
+
+  <div class="footer-links">
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+    <a href="/support.html">Support</a>
+  </div>
+</footer>
+
+  <script>
+    const toggle = document.getElementById("menuToggle");
+    const navMenu = document.getElementById("navMenu");
+    toggle.addEventListener("click", () => {
+      navMenu.classList.toggle("show");
+    });
+  </script>
+
+  <script>
+    const video = document.getElementById("video");
+    const startBtn = document.getElementById("start");
+    const finishBtn = document.getElementById("finish");
+    const resetBtn = document.getElementById("reset");
+    const countdownEl = document.getElementById("countdown");
+    const previewCanvas = document.getElementById("previewCanvas");
+    const ctx = previewCanvas.getContext("2d");
+    const previewAreaLive = document.getElementById("previewAreaLive");
+    const flashEffect = document.getElementById("flashEffect");
+    const delaySelect = document.getElementById("delaySelect");
+
+    let photos = [null, null, null];
+    let delayTime = 3000;
+    let videoSiap = false;
+
+    delaySelect.addEventListener("change", (e) => {
+      delayTime = parseInt(e.target.value);
+    });
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((error) => {
+        alert("Tidak dapat mengakses webcam.");
+      });
+
+    video.addEventListener("loadedmetadata", () => {
+      videoSiap = true;
+      console.log("Video siap digunakan.");
+    });
+
+    const showCountdown = async (ms) => {
+      const seconds = ms / 1000;
+      for (let i = seconds; i > 0; i--) {
+        countdownEl.textContent = i;
+        await new Promise((res) => setTimeout(res, 1000));
+      }
+      countdownEl.textContent = "📸";
+
+      flashEffect.style.opacity = 1;
+      await new Promise((res) => setTimeout(res, 100));
+      flashEffect.style.opacity = 0;
+
+      await new Promise((res) => setTimeout(res, 500));
+      countdownEl.textContent = "";
+    };
+
+    async function ambilFotoKe(i) {
+      if (!videoSiap || video.videoWidth === 0 || video.videoHeight === 0) {
+        alert("Video belum siap. Coba lagi sebentar.");
+        return;
+      }
+
+      await showCountdown(delayTime);
+
+      const targetWidth = 1280;
+      const targetHeight = 853;
+      const videoRatio = video.videoWidth / video.videoHeight;
+      const targetRatio = targetWidth / targetHeight;
+
+      let sx = 0, sy = 0, sWidth = video.videoWidth, sHeight = video.videoHeight;
+
+      if (videoRatio > targetRatio) {
+        sHeight = video.videoHeight;
+        sWidth = sHeight * targetRatio;
+        sx = (video.videoWidth - sWidth) / 2;
+      } else {
+        sWidth = video.videoWidth;
+        sHeight = sWidth / targetRatio;
+        sy = (video.videoHeight - sHeight) / 2;
+      }
+
+      previewCanvas.width = targetWidth;
+      previewCanvas.height = targetHeight;
+
+      ctx.save();
+      ctx.translate(targetWidth, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
+      ctx.restore();
+
+      const dataURL = previewCanvas.toDataURL("image/jpeg");
+      photos[i] = dataURL;
+
+      tampilkanFoto(i);
+      cekSelesai();
+    }
+
+    function tampilkanFoto(i) {
+      let container = document.getElementById(`foto-${i}`);
+      if (!container) {
+        container = document.createElement("div");
+        container.className = "preview-item";
+        container.id = `foto-${i}`;
+        previewAreaLive.appendChild(container);
+      }
+
+      container.innerHTML = `
+        <img src="${photos[i]}" class="preview-live-img" onclick="ulangFoto(${i})" title="Klik untuk ulang foto" />
+      `;
+    }
+
+    function cekSelesai() {
+      finishBtn.disabled = !photos.every(p => p !== null);
+      resetBtn.style.display = 'inline-block';
+    }
+
+    function ulangFoto(index) {
+      ambilFotoKe(index);
+    }
+
+    startBtn.addEventListener("click", async () => {
+      if (!videoSiap) {
+        alert("Tunggu sampai kamera siap.");
+        return;
+      }
+
+      startBtn.style.display = "none";
+      finishBtn.disabled = false;
+      photos = [null, null, null];
+      previewAreaLive.innerHTML = "";
+
+      for (let i = 0; i < 3; i++) {
+        await ambilFotoKe(i);
+      }
+    });
+
+    finishBtn.addEventListener("click", () => {
+      localStorage.setItem("photos", JSON.stringify(photos));
+      window.location.href = "preview.html";
+    });
+
+    resetBtn.addEventListener("click", () => {
+      photos = [null, null, null];
+      previewAreaLive.innerHTML = "";
+      resetBtn.style.display = 'none';
+      startBtn.style.display = 'inline-block';
+    });
+  </script>
+
+</body>
+</html>
