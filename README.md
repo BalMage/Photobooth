@@ -17,4 +17,4 @@ Information:
 Bisa kalian tambahkan fitur lainnya
 
 🚀 Cara Menjalankan:
-Akses localhost seperti biasa di xampp
+Akses seperti biasa
